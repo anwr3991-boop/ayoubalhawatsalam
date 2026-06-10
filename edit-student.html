@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إدارة وتعديل بيانات الطلاب - جامعة السلام الدولية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        body {
+            margin: 0; padding: 20px;
+            background: radial-gradient(circle at top, #0b1120 0%, #020617 55%, #000 100%);
+            color: #E5F0FF; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .main-wrapper {
+            width: 100%; max-width: 1100px;
+            display: flex; gap: 25px; flex-wrap: wrap-reverse;
+            margin-top: 20px;
+        }
+        /* قسم الجدول الرئيسي */
+        .table-section {
+            flex: 2; min-width: 500px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px; padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(12px);
+        }
+        /* قسم فورم التعديل الجانبي */
+        .form-section {
+            flex: 1; min-width: 350px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 16px; padding: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            align-self: flex-start;
+            position: sticky; top: 20px;
+        }
+        h1, h2 { color: #38bdf8; margin-top: 0; text-align: center; }
+        h1 { font-size: 1.8rem; margin-bottom: 10px; }
+        h2 { font-size: 1.3rem; margin-bottom: 20px; border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding-bottom: 10px; }
+        
+        /* شريط البحث */
+        .search-box {
+            width: 100%; padding: 12px; border-radius: 10px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: #0f172a; color: #fff; font-size: 1rem;
+            margin-bottom: 20px; text-align: center;
+        }
+        .search-box:focus { outline: none; border-color: #38bdf8; }
+
+        /* ستايل الجدول */
+        .table-container { overflow-x: auto; max-height: 500px; border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.95rem; }
+        th, td { padding: 12px 15px; border-bottom: 1px solid rgba(148, 163, 184, 0.1); }
+        th { background-color: rgba(30, 41, 59, 0.8); color: #38bdf8; position: sticky; top: 0; z-index: 5; }
+        tr:hover { background-color: rgba(255, 255, 255, 0.03); }
+        
+        /* الأزرار */
+        .btn {
+            padding: 8px 14px; border-radius: 6px; border: none; font-weight: bold;
+            cursor: pointer; transition: all 0.2s; font-size: 0.85rem;
+        }
+        .btn-edit { background: #38bdf8; color: #020617; }
+        .btn-edit:hover { background: #7dd3fc; }
+        .btn-save { width: 100%; padding: 12px; background: #10b981; color: white; font-size: 1rem; margin-top: 15px; }
+        .btn-save:hover { background: #059669; }
+        .btn-save:disabled { background: #4b5563; color: #9ca3af; cursor: not-allowed; }
+
+        /* حقول الفورم */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 6px; color: #9CA3AF; font-size: 0.9rem; }
+        .form-group input, .form-group select {
+            width: 100%; padding: 10px; border-radius: 8px;
+            background: #0f172a; color: #fff;
+            border: 1px solid rgba(148, 163, 184, 0.3); font-size: 0.95rem;
+        }
+        .form-group input:disabled { background: rgba(255,255,255,0.05); color: #9CA3AF; cursor: not-allowed; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #38bdf8; }
+
+        /* رسائل الحالة */
+        .message { padding: 12px; border-radius: 8px; text-align: center; margin-top: 15px; display: none; font-weight: 500; font-size: 0.9rem; }
+        .success { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; }
+        .error { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; }
+        .loading { color: #38bdf8; text-align: center; font-weight: bold; padding: 20px; }
+
+        .btn-back { display: block; text-align: center; margin-top: 25px; color: #9CA3AF; text-decoration: none; font-size: 0.95rem; }
+        .btn-back:hover { color: #38bdf8; }
+    </style>
+</head>
+<body>
+
+    <h1>قاعدة بيانات ومستندات الطلاب الحية</h1>
+    <p style="color: #9CA3AF; margin: 0;">عرض تلقائي لكافة الطلاب مع إمكانية التعديل الفوري والسريع</p>
+
+    <div class="main-wrapper">
+        
+        <div class="table-section">
+            <input type="text" id="searchBox" class="search-box" placeholder="🔍 ابحث هنا باسم الطالب أو رقم القيد لتصفية الجدول فوراً..." oninput="filterTable()">
+            
+            <div class="table-container">
+                <div id="loadingText" class="loading">⏳ جاري جلب ملفات الطلاب ...</div>
+                <table id="studentsTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>رقم القيد (A)</th>
+                            <th>الاسم بالكامل (B)</th>
+                            <th>الحالة (H)</th>
+                            <th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>📝 لوحة التعديل السريع</h2>
+            <div id="editForm">
+                <div class="form-group">
+                    <label>رقم القيد</label>
+                    <input type="text" id="studentId" disabled placeholder="اختر طالباً لتعديله...">
+                </div>
+                <div class="form-group">
+                    <label>اسم الطالب بالكامل</label>
+                    <input type="text" id="studentName" disabled>
+                </div>
+                <div class="form-group">
+                    <label>الكلية</label>
+                    <input type="text" id="studentCollege" disabled>
+                </div>
+                <div class="form-group">
+                    <label>التخصص / القسم</label>
+                    <input type="text" id="studentDep" disabled>
+                </div>
+                <div class="form-group">
+                    <label>حالة الطالب الحالية (العمود H)</label>
+                    <select id="studentStatus" disabled>
+                        <option value="نظامي">نظامي</option>
+                        <option value="خريج">خريج</option>
+                        <option value="موقف">موقف</option>
+                        <option value="منقطع">منقطع</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-save" id="saveBtn" onclick="updateStudent()" disabled>اعتماد وتحديث بيانات الطالب 💾</button>
+            </div>
+            <div id="msgBox" class="message"></div>
+        </div>
+
+    </div>
+
+    <a href="dashboard.html" class="btn-back">🡪 العودة للوحة التحكم الرئيسية</a>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgmunZv-wU-kBJqP6cbVk-A1sqoWd9TYqesW7FS0CWz5XRejQ23hOJ0QqpTwpjI0X8kQ/exec";
+    
+    let allStudents = [];
+    let originalSelectedId = ""; 
+
+    window.onload = function() {
+        loadAllStudents();
+    };
+
+    // 1. جلب البيانات الأساسية للجدول
+    async function loadAllStudents() {
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=studentsSummary`);
+            const data = await response.json();
+            
+            if (!data.students || data.students.length === 0) {
+                document.getElementById("loadingText").innerText = "⚠️ لا يوجد طلاب مسجلين حالياً في الشيت.";
+                return;
+            }
+
+            allStudents = data.students;
+            renderTable(allStudents);
+
+        } catch (error) {
+            console.error(error);
+            document.getElementById("loadingText").innerText = "❌ خطأ في الاتصال بالسيرفر، تأكد من عمل الـ Deployment.";
+        }
+    }
+
+    // بناء الجدول
+    function renderTable(studentsList) {
+        const tbody = document.getElementById("tableBody");
+        tbody.innerHTML = "";
+
+        studentsList.forEach(student => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td><b>${student.id}</b></td>
+                <td>${student.full_name}</td>
+                <td><span style="color:#38bdf8">${student.stud_status || 'نظامي'}</span></td>
+                <td><button class="btn btn-edit" onclick="selectStudent('${student.id}')">عرض للتعديل 📝</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById("loadingText").style.display = "none";
+        document.getElementById("studentsTable").style.display = "table";
+    }
+
+    // 2. جلب ملف الطالب وتفعيل الخانات
+    async function selectStudent(id) {
+        showMsg("جاري سحب ملف الطالب كاملاً حياً...", "success");
+        originalSelectedId = id; 
+        
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=getStudent&id=${encodeURIComponent(id)}`);
+            const data = await response.json();
+
+            if (data.error) {
+                showMsg("❌ فشل استدعاء بيانات الطالب الكاملة.", "error");
+                return;
+            }
+
+            // تعبئة البيانات
+            document.getElementById("studentId").value = data.id;
+            document.getElementById("studentName").value = data.full_name;
+            document.getElementById("studentCollege").value = data.college || "";
+            document.getElementById("studentDep").value = data.department || "";
+            document.getElementById("studentStatus").value = (data.stud_status || "نظامي").trim();
+
+            // تفعيل كل الحقول
+            document.getElementById("studentId").disabled = false;
+            document.getElementById("studentName").disabled = false;
+            document.getElementById("studentCollege").disabled = false;
+            document.getElementById("studentDep").disabled = false;
+            document.getElementById("studentStatus").disabled = false;
+            document.getElementById("saveBtn").disabled = false;
+
+            showMsg("📋 تم تحميل بيانات الطالب بنجاح، يمكنك تعديلها الآن.", "success");
+
+        } catch (error) {
+            showMsg("❌ خطأ أثناء الاتصال بجوجل شيت لجلب البيانات.", "error");
+        }
+    }
+
+    // 3. ترحيل التعديلات تلقائياً باسم الموظف الحقيقي بدون نوافذ منبثقة
+    async function updateStudent() {
+        const saveBtn = document.getElementById("saveBtn");
+        const newId = document.getElementById("studentId").value.trim();
+        const name = document.getElementById("studentName").value.trim();
+        const college = document.getElementById("studentCollege").value.trim();
+        const dep = document.getElementById("studentDep").value.trim();
+        const status = document.getElementById("studentStatus").value;
+
+        if(!newId || !name || !college || !dep) {
+            showMsg("الرجاء عدم ترك أي حقل فارغ أثناء حفظ التعديل.", "error");
+            return;
+        }
+
+        // 👤 سحب اسم الموظف صامتاً وتلقائياً من المتصفح، أو وضع وسم غير معروف إذا لم يتم العثور عليه للتنبيه الخلل
+        let currentUser = localStorage.getItem("username") || localStorage.getItem("user") || sessionStorage.getItem("username") || "مستخدم غير معروف";
+
+        saveBtn.disabled = true;
+        showMsg("جاري ترحيل وحفظ التعديلات في الجوجل شيت الحين...", "success");
+
+        const payload = {
+            token: "AIU_SECURE_2026",
+            action: "updateStudentData",
+            oldId: originalSelectedId, 
+            id: newId,                 
+            name: name,
+            college: college,
+            dep: dep,
+            status: status,
+            user: currentUser // 👈 إرسال التوقيع التلقائي إلى الـ API
+        };
+
+        try {
+            // استخدام طريقة إرسال نصية متوافقة لتفادي مشاكل الـ CORS ومنع إرسال طلبات فارغة
+            await fetch(SCRIPT_URL, {
+                method: "POST",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(payload)
+            });
+
+            showMsg(`🎉 تم تحديث بيانات الطالب وحفظ التعديلات بنجاح فوري! (الموثق: ${currentUser})`, "success");
+            
+            setTimeout(() => {
+                loadAllStudents();
+                resetForm();
+            }, 1500);
+
+        } catch (error) {
+            showMsg("❌ حدث خطأ في الشبكة، لم يتم الحفظ.", "error");
+            saveBtn.disabled = false;
+        }
+    }
+
+    // 4. تصفية وبحث سريع
+    function filterTable() {
+        const query = document.getElementById("searchBox").value.toLowerCase();
+        const filtered = allStudents.filter(student => 
+            student.id.toString().toLowerCase().includes(query) || 
+            student.full_name.toLowerCase().includes(query)
+        );
+        renderTable(filtered);
+    }
+
+    function showMsg(text, type) {
+        const msgBox = document.getElementById("msgBox");
+        msgBox.innerText = text;
+        msgBox.className = `message ${type}`;
+        msgBox.style.display = "block";
+    }
+
+    function resetForm() {
+        document.getElementById("studentId").value = "";
+        document.getElementById("studentName").value = "";
+        document.getElementById("studentCollege").value = "";
+        document.getElementById("studentDep").value = "";
+        document.getElementById("studentId").disabled = true;
+        document.getElementById("studentName").disabled = true;
+        document.getElementById("studentCollege").disabled = true;
+        document.getElementById("studentDep").disabled = true;
+        document.getElementById("studentStatus").disabled = true;
+        document.getElementById("saveBtn").disabled = true;
+        originalSelectedId = "";
+    }
+</script>
+</body>
+</html>

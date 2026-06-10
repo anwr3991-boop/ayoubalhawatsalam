@@ -1,0 +1,199 @@
+/* ألوان عامة */
+:root {
+  --primary: #004b8f;
+  --primary-dark: #01233f;
+  --accent: #0ea5e9;
+  --bg: #f1f5f9;
+  --card-bg: #ffffff;
+  --text: #0f172a;
+  --muted: #6b7280;
+  --error: #dc2626;
+}
+
+/* ضبط الجسم ليكون مناسب للهاتف */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Cairo", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1d4ed8);
+  color: var(--text);
+  direction: rtl;
+}
+
+/* تغليف مركزي للكرت */
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 10px;
+}
+
+/* الكرت الرئيسي */
+.card {
+  width: 100%;
+  max-width: 420px; /* ممتاز للموبايل */
+  background: var(--card-bg);
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.35);
+  padding: 18px 16px 20px;
+  text-align: center;
+  position: relative;
+}
+
+/* مربع الشعار */
+.logo-box {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #e5f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  overflow: hidden;
+  border: 2px solid rgba(148, 163, 184, 0.7);
+}
+
+.logo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* العناوين */
+.card h2 {
+  margin: 0 0 4px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary-dark);
+}
+
+.subtitle {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* حقل رقم القيد */
+#sid {
+  width: 100%;
+  padding: 10px 11px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  font-family: inherit;
+  text-align: center;
+  transition: 0.25s;
+}
+
+#sid::placeholder {
+  color: #9ca3af;
+}
+
+#sid:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(14, 165, 233, 0.5);
+}
+
+/* زر الاستعلام */
+button {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #f9fafb;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.2s;
+  box-shadow: 0 10px 24px rgba(22, 163, 74, 0.7);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(22, 163, 74, 1);
+}
+
+/* رسالة الخطأ */
+.error {
+  min-height: 18px;
+  margin: 4px 0 4px;
+  font-size: 0.8rem;
+  color: var(--error);
+}
+
+/* منطقة النتيجة */
+.result {
+  margin-top: 8px;
+  text-align: right;
+  font-size: 0.9rem;
+}
+
+/* عناوين داخل النتيجة */
+.result h3 {
+  margin: 6px 0 4px;
+  font-size: 1rem;
+}
+
+.result h4 {
+  margin: 8px 0 4px;
+  font-size: 0.95rem;
+  color: var(--primary-dark);
+}
+
+/* نصوص التفاصيل */
+.result p {
+  margin: 2px 0;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+/* الكورس كرت بسيط */
+.course {
+  margin-top: 6px;
+  padding: 7px 9px;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.course .code {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--primary-dark);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #e0edff;
+}
+
+.course .name {
+  font-size: 0.85rem;
+}
+
+/* شوية تحسين لعنوان الفلوس */
+.result strong {
+  font-weight: 800;
+}
+
+/* على الشاشات الكبيرة شوية نوسّط الكرت */
+@media (min-width: 768px) {
+  .wrapper {
+    padding: 32px 10px;
+  }
+  .card {
+    max-width: 460px;
+  }
+}

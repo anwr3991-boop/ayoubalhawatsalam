@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>دخول الموظفين - جامعة السلام الدولية</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* تنسيق احترافي فخم مع الحفاظ على كل بنية الحسابات والألوان */
+    :root {
+      --bg-slate: #020617;
+      --card-bg: rgba(11, 18, 32, 0.8);
+      --primary: #0ea5e9;
+      --primary-dark: #2563eb;
+      --good: #22c55e;
+      --bad: #ef4444;
+      --gold: #f4b547;
+      --text: #e5e7eb;
+      --muted: #a7b0c0;
+      --border-soft: rgba(255, 255, 255, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Cairo", sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-slate);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* خلفية برمجية شبكية حديثة تعطي طابع الأنظمة السحابية المتقدمة */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 35px 35px;
+      background-position: center;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .bg {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      max-width: 440px;
+      padding: 20px;
+    }
+
+    /* كرت تسجيل الدخول الاحترافي الزجاجي */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-soft);
+      border-radius: 24px;
+      padding: 40px 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255,255,255,0.05);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    /* الهيدر والشعار */
+    .top {
+      margin-bottom: 35px;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logoWrap {
+      position: relative;
+      width: 84px;
+      height: 84px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .brandText {
+      margin-top: 4px;
+    }
+
+    .uni {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .statusPill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(14, 165, 233, 0.08);
+      border: 1px solid rgba(14, 165, 233, 0.15);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: var(--primary);
+      font-weight: 600;
+      margin-top: 14px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--primary);
+      border-radius: 50%;
+    }
+
+    /* الفورم وحقول الإدخال */
+    .wrap {
+      text-align: right;
+    }
+
+    .box {
+      margin-bottom: 22px;
+    }
+
+    .box label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      padding-right: 2px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.2s ease;
+      text-align: right;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      background: #030712;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+    }
+
+    /* الزر الاحترافي الفخم */
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 25px -5px rgba(37, 99, 235, 0.5);
+      filter: brightness(1.1);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    /* رسائل التنبيه الأصلية المنسقة */
+    .msg {
+      min-height: 24px;
+      margin-top: 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .msg.info { color: var(--primary); }
+    .msg.error { color: var(--bad); }
+    .msg.ok { color: var(--good); }
+
+    /* أنيميشن الاهتزاز عند الخطأ الأصلي */
+    @keyframes headShake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+      100% { transform: translateX(0); }
+    }
+
+    .card.shake {
+      animation: headShake 0.4s ease-in-out;
+    }
+
+    /* استجابة الهواتف */
+    @media (max-width: 480px) {
+      .card {
+        padding: 32px 20px;
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg">
+    <div class="card" id="mainCard">
+      
+      <header class="top">
+        <div class="brand">
+          <div class="logoWrap">
+            <img src="aiu-logo.png" alt="شعار جامعة السلام الدولية" class="logo" />
+          </div>
+          <div class="brandText">
+            <div class="uni">جامعة السلام الدولية</div>
+            <div class="sub">منظومة شؤون الطلبة والامتحانات</div>
+          </div>
+        </div>
+        <div class="statusPill">
+          <span class="dot"></span>
+          <span>بوابة الموظفين</span>
+        </div>
+      </header>
+
+      <div class="wrap">
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          
+          <div class="box">
+            <label for="username">اسم المستخدم</label>
+            <input type="text" id="username" class="form-control" placeholder="أدخل اسم المستخدم" required autocomplete="username" />
+          </div>
+
+          <div class="box">
+            <label for="password">كلمة المرور</label>
+            <input type="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password" />
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-submit">تسجيل الدخول</button>
+        </form>
+      </div>
+
+      <div id="msgBox" class="msg"></div>
+
+    </div>
+  </div>
+
+  <script>
+    // جلب الرابط الموحد مباشرة من ملف التكوين الأصلي الفعال لديك
+    const API_URL = "https://script.google.com/macros/s/AKfycbwgmunZv-wU-kBJqP6cbVk-A1sqoWd9TYqesW7FS0CWz5XRejQ23hOJ0QqpTwpjI0X8kQ/exec";
+
+    // تفعيل المؤثرات الصوتية الأصلية الخاصة بك عند التفاعل
+    function soundSuccess() {
+      const audio = new Audio("https://www.soundjay.com/buttons/sounds/button-09.mp3");
+      audio.play().catch(()=>{});
+    }
+
+    function soundError() {
+      const audio = new Audio("https://www.soundjay.com/buttons/sounds/button-10.mp3");
+      audio.play().catch(()=>{});
+    }
+
+    function setMsg(text, type) {
+      const msgBox = document.getElementById("msgBox");
+      msgBox.className = "msg " + type;
+      msgBox.textContent = text;
+    }
+
+    function setLoading(isLoading) {
+      const btn = document.getElementById("submitBtn");
+      if (isLoading) {
+        btn.disabled = true;
+        btn.style.opacity = "0.7";
+      } else {
+        btn.disabled = false;
+        btn.style.opacity = "1";
+      }
+    }
+
+    function punchCard(className) {
+      const card = document.getElementById("mainCard");
+      card.classList.remove("shake", "success");
+      void card.offsetWidth; // Trigger reflow
+      card.classList.add(className);
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+
+      const u = document.getElementById("username").value.trim();
+      const p = document.getElementById("password").value.trim();
+
+      if (!u || !p) {
+        setMsg("❌ الرجاء ملء الحقول المطلوبة.", "error");
+        punchCard("shake");
+        soundError();
+        return;
+      }
+
+      setLoading(true);
+      setMsg("⏳ جاري التحقق من بيانات الدخول...", "info");
+
+      const url = `${API_URL}?action=login&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(p)}`;
+
+      try {
+        const res  = await fetch(url);
+        const text = await res.text();
+
+        let data;
+        try { 
+          data = JSON.parse(text); 
+        } catch (e) {
+          setLoading(false);
+          setMsg("خطأ في قراءة رد السيرفر (الرد ليس JSON).", "error");
+          punchCard("shake");
+          soundError();
+          return;
+        }
+
+        if (data.status === "OK") {
+          const username = data.username || u;
+          const role     = data.role || "";
+
+          localStorage.setItem("USERNAME", username);
+          localStorage.setItem("ROLE", role);
+          localStorage.setItem("aiu_user", username);
+          localStorage.setItem("aiu_role", role);
+
+          setMsg("✔ تم تسجيل الدخول بنجاح، جاري التحويل...", "ok");
+          punchCard("success");
+          soundSuccess();
+
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 850);
+
+        } else {
+          setLoading(false);
+          setMsg(data.message || "❌ بيانات الدخول غير صحيحة.", "error");
+          punchCard("shake");
+          soundError();
+        }
+
+      } catch (error) {
+        setLoading(false);
+        setMsg("❌ خطأ في الاتصال بالسيرفر، تحقق من الشبكة.", "error");
+        punchCard("shake");
+        soundError();
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة الإحصائيات - جامعة السلام الدولية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="salam.css">
+    <style>
+        .hero {
+            min-height: 100vh;
+            padding: 28px 14px;
+            background: radial-gradient(circle at top, #0b1120 0%, #020617 55%, #000 100%);
+            color: #E5F0FF;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .stats-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header-title h1 {
+            font-size: 2rem;
+            color: #38bdf8;
+            margin-bottom: 5px;
+        }
+        /* شبكة اللوحات الرقمية المحدثة لتستوعب 3 بطاقات بشكل متناسق */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #38bdf8;
+        }
+        .stat-card h3 {
+            font-size: 1rem;
+            color: #9CA3AF;
+            margin: 0 0 10px 0;
+        }
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .stat-card .total-label { color: #38bdf8; } /* تعديل اللون للأزرق النظامي */
+        .stat-card .graduates-label { color: #10b981; } /* لون أخضر مميز للخريجين */
+        .stat-card .filter-label { color: #f59e0b; }
+
+        /* قسـم التصفية الديناميكية للفصول */
+        .filter-section {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(148,163,184,0.15);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .filter-section select {
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: #0f172a;
+            color: #fff;
+            border: 1px solid rgba(148,163,184,0.4);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        /* جدول عرض الكليات */
+        .colleges-box {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+        }
+        .colleges-box h2 {
+            font-size: 1.3rem;
+            color: #38bdf8;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .college-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .progress-bar-bg {
+            background: rgba(255,255,255,0.05);
+            border-radius: 999px;
+            height: 8px;
+            width: 150px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        .progress-bar-fill {
+            background: #38bdf8;
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 24px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(148,163,184,0.3);
+            color: #E5F0FF;
+            text-decoration: none;
+        }
+        .btn-back:hover { border-color: #38bdf8; background: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <div class="stats-container">
+        
+        <div class="header-title">
+            <h1>لوحة البيانات والإحصائيات الحية</h1>
+            <p>جامعة السلام الدولية - تحليل فوري لأعداد الطلاب المسجلين</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="stat-card">
+                <h3>إجمالي الطلاب الحاليين (النظاميين)</h3>
+                <div class="number total-label" id="totalStudentsNum">0</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>إجمالي خريجي الجامعة (العام)</h3>
+                <div class="number graduates-label" id="totalGraduatesNum">0</div>
+            </div>
+
+            <div class="stat-card">
+                <h3>طلاب الفصل المختار</h3>
+                <div class="number filter-label" id="filteredSemesterNum">0</div>
+                <span id="activeSemesterName" style="font-size:0.85rem; color:#9CA3AF;">لم يتم تحديد فصل</span>
+            </div>
+        </div>
+
+        <div class="filter-section">
+            <label style="font-weight: bold; color:#38bdf8;">اختر الفصل الدراسي للاستعلام الفعلي:</label>
+            <select id="semesterSelector" onchange="onSemesterChange(this.value)">
+                <option value="">-- جاري تحميل الفصول الدراسية --</option>
+            </select>
+        </div>
+
+        <div class="colleges-box">
+            <h2>تعداد الطلاب الحالي لكل كلية ونسبة التوزيع العام</h2>
+            <div id="collegesContainer">
+                <p style="color:#9CA3AF; text-align:center;">جاري جلب بيانات الكليات من النظام أونلاين...</p>
+            </div>
+        </div>
+
+        <a href="dashboard.html" class="btn-back">🡪 العودة للوحة التحكم رئيسية</a>
+
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgmunZv-wU-kBJqP6cbVk-A1sqoWd9TYqesW7FS0CWz5XRejQ23hOJ0QqpTwpjI0X8kQ/exec"; 
+    
+    let rawStatsData = null;
+
+    async function loadStatistics() {
+        try {
+            const response = await fetch(`${SCRIPT_URL}?action=getStats`);
+            const data = await response.json();
+            rawStatsData = data;
+            
+            // 1. عرض الرقم الإجمالي العام للطلاب النظاميين (المفترض بعد تعديل السكريبت يكون صافي)
+            document.getElementById("totalStudentsNum").innerText = data.totalStudents;
+            
+            // 2. عرض إجمالي الخريجين العام في البطاقة الجديدة
+            document.getElementById("totalGraduatesNum").innerText = data.totalGraduates || 0;
+            
+            // 3. تعبئة قائمة اختيار الفصول الدراسية المتاحة في الشيت تلقائياً
+            const selector = document.getElementById("semesterSelector");
+            selector.innerHTML = `<option value="">اختر الفصل الدراسي من هنا</option>`;
+            
+            data.semesters.forEach(sem => {
+                const opt = document.createElement("option");
+                opt.value = sem;
+                opt.innerText = sem;
+                selector.appendChild(opt);
+            });
+            
+            // تعيين ربيع 2026 كقيمة افتراضية إذا كانت موجودة بالقائمة
+            if(data.semesters.includes("ربيع 2026")) {
+                selector.value = "ربيع 2026";
+                onSemesterChange("ربيع 2026");
+            } else if(data.semesters.length > 0) {
+                selector.value = data.semesters[0];
+                onSemesterChange(data.semesters[0]);
+            }
+
+            // 4. بناء جدول تعداد الكليات ونسبة إشغالها بالكامل
+            // ملاحظة: النسبة المئوية للكليات ستحسب بناءً على إجمالي الطلاب النظاميين الحاليين
+            renderColleges(data.colleges, data.totalStudents);
+            
+        } catch (error) {
+            console.error("Error loading stats:", error);
+            document.getElementById("collegesContainer").innerHTML = "<p style='color:#ef4444; text-align:center;'>❌ فشل الاتصال بقاعدة البيانات وسحب الإحصائيات.</p>";
+        }
+    }
+
+    function renderColleges(colleges, total) {
+        const container = document.getElementById("collegesContainer");
+        container.innerHTML = "";
+        
+        const collegeEntries = Object.entries(colleges);
+        if(collegeEntries.length === 0) {
+            container.innerHTML = "<p style='color:#9CA3AF; text-align:center;'>لا توجد بيانات كليات مسجلة حالياً.</p>";
+            return;
+        }
+
+        collegeEntries.forEach(([name, count]) => {
+            const percentage = total > 0 ? ((count / total) * 100).toFixed(1) : 0;
+            
+            const row = document.createElement("div");
+            row.className = "college-row";
+            row.innerHTML = `
+                <div style="font-weight:600;">🎓 ${name}</div>
+                <div style="display:flex; align-items:center; gap: 15px;">
+                    <span style="font-weight:bold; color:#38bdf8;">${count} طالب</span>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+                    </div>
+                    <span style="color:#10b981; font-size:0.85rem; width:45px; text-align:left;">${percentage}%</span>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function onSemesterChange(selectedSemester) {
+        if (!rawStatsData || !selectedSemester) {
+            document.getElementById("filteredSemesterNum").innerText = "0";
+            document.getElementById("activeSemesterName").innerText = "لم يتم تحديد فصل";
+            return;
+        }
+        
+        const studentCount = rawStatsData.semesterStudentsRaw[selectedSemester] || 0;
+        
+        document.getElementById("filteredSemesterNum").innerText = studentCount;
+        document.getElementById("activeSemesterName").innerText = `الطلاب الفعليين لـ (${selectedSemester})`;
+    }
+
+    loadStatistics();
+</script>
+
+</body>
+</html>

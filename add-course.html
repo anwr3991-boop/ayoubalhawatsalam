@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إضافة مادة - جامعة السلام الدولية</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- خط كايرو -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #004b8f;
+      --primary-soft: #e0f2ff;
+      --primary-dark: #01233f;
+      --gold: #F4B547;
+      --bg: #f3f4f6;
+      --muted: #6b7280;
+      --border: #d4d4d8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Cairo", sans-serif;
+      background: #e6e9c6;
+      color: #0f172a;
+      direction: rtl;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 10px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 920px;
+      background: #ffffff;
+      border-radius: 22px;
+      box-shadow: 0 20px 60px rgba(15,23,42,0.18);
+      border: 1px solid rgba(148,163,184,0.35);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      position: relative;
+    }
+
+    .top-bar {
+      grid-column: 1 / -1;
+      padding: 10px 20px 6px;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #004b8f, #0073c9);
+      color: #f9fafb;
+      position: relative;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-circle {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    .top-text h1 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .top-text p {
+      margin: 0;
+      font-size: 0.75rem;
+      opacity: 0.9;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.16);
+      border: 1px solid rgba(248, 250, 252, 0.4);
+    }
+
+    /* ===== وضع العرض فقط (مقفول) ===== */
+    .readonly .form-pane {
+      opacity: 0.55;
+      filter: grayscale(0.25);
+      pointer-events: none; /* يمنع أي تفاعل */
+    }
+
+    /* نخلّي الرسالة نفسها قابلة للظهور بوضوح */
+    .readonly-banner {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      z-index: 5;
+      font-size: 0.78rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.25);
+      border: 1px solid rgba(248, 250, 252, 0.35);
+      color: #fff;
+      backdrop-filter: blur(6px);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .readonly-banner .dot2{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #f59e0b;
+      box-shadow: 0 0 0 4px rgba(245,158,11,0.22);
+    }
+
+    .form-pane {
+      padding: 16px 18px 18px;
+      border-left: 1px solid #edf2ff;
+      position: relative;
+    }
+
+    .form-title {
+      margin: 4px 0 6px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-title span.icon { font-size: 1.4rem; }
+
+    .subtitle {
+      margin: 0 0 12px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 6px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: #374151;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      font-size: 0.9rem;
+      transition: 0.25s;
+      font-family: "Cairo", sans-serif;
+    }
+
+    input::placeholder { color: #9ca3af; }
+
+    select:invalid { color: #9ca3af; }
+
+    input:focus, select:focus {
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 1px rgba(14,165,233,0.5);
+      outline: none;
+    }
+
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 9px 22px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #F4B547, #d98a1b);
+      color: #0f172a;
+      font-size: 0.95rem;
+      cursor: pointer;
+      font-weight: 800;
+      transition: 0.25s;
+      box-shadow: 0 12px 26px rgba(217,138,27,0.65);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button span.btn-icon { font-size: 1.1rem; }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(217,138,27,0.95);
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .msg {
+      margin-top: 8px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    #raw {
+      display: none !important;
+      margin-top: 6px;
+      background: #020617;
+      color: #22c55e;
+      padding: 6px 8px;
+      font-size: 11px;
+      max-height: 110px;
+      overflow: auto;
+      border-radius: 8px;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .info-pane {
+      padding: 16px 18px 18px;
+      background: linear-gradient(135deg, #e0f2ff, #fdfcfb);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(148,163,184,0.45);
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .badge::before {
+      content: "●";
+      font-size: 0.6rem;
+      color: #22c55e;
+    }
+
+    .info-title {
+      margin: 0 0 6px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .info-text {
+      margin: 0 0 10px;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .bullet-list {
+      margin: 4px 0 10px;
+      padding: 0;
+      list-style: none;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .bullet-list li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #0ea5e9;
+    }
+
+    .mini-label {
+      font-size: 0.75rem;
+      color: #6b7280;
+      margin-top: 10px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .pill {
+      font-size: 0.72rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(148,163,184,0.4);
+      color: #1f2937;
+    }
+
+    .blob-soft {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(56,189,248,0.45), transparent);
+      top: -40px;
+      left: -40px;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .blob-soft-2 {
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(244,181,71,0.45), transparent);
+      bottom: -50px;
+      right: -20px;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    @keyframes floatIcon {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-4px); }
+    }
+
+    @media (max-width: 800px) {
+      .shell { grid-template-columns: 1fr; }
+      .form-pane { border-left: none; border-top: 1px solid #edf2ff; }
+    }
+
+    @media (max-width: 550px) {
+      body { padding: 14px 8px; }
+      .shell { border-radius: 18px; }
+      .top-bar {
+        padding: 10px 12px 6px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      .readonly-banner{
+        position: static;
+        margin-top: 6px;
+        background: rgba(15,23,42,0.22);
+      }
+      .form-pane { padding: 14px 12px 14px; }
+      .info-pane { padding: 14px 12px 12px; }
+      .row { grid-template-columns: 1fr; }
+      button { width: 100%; justify-content: center; }
+      .actions { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- أضفنا readonly على الغلاف -->
+<div class="shell readonly">
+
+  <div class="top-bar">
+    <div class="top-left">
+      <div class="logo-circle">📘</div>
+      <div class="top-text">
+        <h1>لوحة المواد الدراسية</h1>
+        <p>إضافة واعتماد مقررات الخطة الأكاديمية.</p>
+      </div>
+    </div>
+
+    <div class="chip">جامعة السلام الدولية</div>
+
+    <!-- شريط يوضح أن الصفحة مقفولة -->
+    <div class="readonly-banner" title="تم تعطيل الإضافة مؤقتاً">
+      <span class="dot2"></span>
+      <span>عرض فقط — النظام مقفول</span>
+    </div>
+  </div>
+
+  <div class="form-pane">
+    <h2 class="form-title">
+      <span class="icon">➕</span>
+      <span>إضافة مادة جديدة</span>
+    </h2>
+    <p class="subtitle">
+      قم بإدخال رمز المادة واسمها وتحديد الكلية بشكل صحيح ليتم استخدامها في تسجيل مواد الطلاب والتقارير.
+      <br>
+      <strong>ملاحظة:</strong> هذه الصفحة حالياً <u>للعرض فقط</u>.
+    </p>
+
+    <div class="row">
+      <div class="field">
+        <label for="code">رمز المادة</label>
+        <input type="text" id="code" placeholder="مثال: IT101" disabled>
+      </div>
+
+      <div class="field">
+        <label for="name">اسم المادة</label>
+        <input type="text" id="name" placeholder="مثال: لغة عربية 1" disabled>
+      </div>
+
+      <div class="field">
+        <label for="college">الكلية</label>
+        <select id="college" required disabled>
+          <option value="" disabled selected hidden>اختر الكلية</option>
+        </select>
+      </div>
+
+      <!-- اسبقية المادة (اختياري) -->
+      <div class="field" style="grid-column:1 / -1;">
+        <label for="prereq">رمز اسبقة المادة (إن وُجدت) اكتب رمز المادة فقط بدون اسم </label>
+        <input type="text" id="prereq" placeholder="مثال: 100 - مادة يجب تصفيتها قبل هذه المادة" disabled>
+      </div>
+    </div>
+
+    <div class="actions">
+      <!-- الزر مقفول -->
+      <button type="button" disabled aria-disabled="true">
+        <span class="btn-icon">🔒</span>
+        <span>حفظ المادة (مقفول)</span>
+      </button>
+
+      <span class="hint">
+        يفضّل اعتماد نمط ثابت لرموز المواد (مثل IT101، PHAR201)، مع ربط كل مادة بالكلية الصحيحة.
+      </span>
+    </div>
+
+    <p id="msg" class="msg" style="color:#b45309;">⚠ هذه الصفحة للعرض فقط — لا يمكن إضافة/تعديل أي بيانات.</p>
+    <pre id="raw"></pre>
+  </div>
+
+  <div class="info-pane">
+    <div class="blob-soft"></div>
+    <div class="blob-soft-2"></div>
+
+    <div class="badge">بوابة التسجيل الأكاديمي</div>
+    <h3 class="info-title">ما فائدة صفحة إضافة مادة؟</h3>
+    <p class="info-text">
+      من خلال هذه الصفحة يتم تعريف المقررات الأساسية في النظام، بحيث
+      تُستخدم لاحقاً في:
+    </p>
+
+    <ul class="bullet-list">
+      <li><span class="dot"></span>تسجيل مواد الطلاب لكل فصل دراسي.</li>
+      <li><span class="dot"></span>استخراج تقارير المواد وعدد المسجلين.</li>
+      <li><span class="dot"></span>توحيد أسماء ورموز المقررات في جميع الكليات.</li>
+    </ul>
+
+    <div class="mini-label">أمثلة على رموز المواد:</div>
+    <div class="pill-row">
+      <div class="pill">PHAR101 - مدخل إلى الصيدلة</div>
+      <div class="pill">NURS205 - أساسيات التمريض</div>
+      <div class="pill">IT120 - مهارات الحاسوب</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ✅ تم تعطيل أي اتصال أو إضافة (صفحة عرض فقط)
+
+  // نفس رابط الـ API المستخدم في بقية الصفحات (موجود للعرض فقط)
+  const API_URL = "https://script.google.com/macros/s/AKfycbwgmunZv-wU-kBJqP6cbVk-A1sqoWd9TYqesW7FS0CWz5XRejQ23hOJ0QqpTwpjI0X8kQ/exec";
+                   
+  document.addEventListener('DOMContentLoaded', () => {
+    // لا نحمل كليات ولا ننفذ طلبات
+    lockFormUI("⚠ هذه الصفحة للعرض فقط — النظام مقفول ولا يمكن إضافة أي مادة.");
+  });
+
+  function lockFormUI(message) {
+    // تعطيل كل عناصر الإدخال/الأزرار داخل الفورم
+    const scope = document.querySelector('.form-pane');
+    if (!scope) return;
+
+    scope.querySelectorAll('input, select, textarea, button').forEach(el => {
+      el.disabled = true;
+      el.setAttribute('aria-disabled', 'true');
+    });
+
+    const msg = document.getElementById('msg');
+    if (msg) {
+      msg.style.color = "#b45309";
+      msg.textContent = message || "⚠ هذه الصفحة للعرض فقط.";
+    }
+
+    const raw = document.getElementById('raw');
+    if (raw) raw.textContent = "";
+  }
+
+  // موجودة فقط حتى لو حد حاول يناديها من الكونسول
+  async function loadColleges() { return; }
+  async function saveCourse() { return; }
+</script>
+
+</body>
+</html>
