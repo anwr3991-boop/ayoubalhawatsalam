@@ -287,10 +287,8 @@
   </div>
 
   <script>
-    // جلب الرابط الموحد مباشرة من ملف التكوين الأصلي الفعال لديك
     const API_URL = "https://script.google.com/macros/s/AKfycbwgmunZv-wU-kBJqP6cbVk-A1sqoWd9TYqesW7FS0CWz5XRejQ23hOJ0QqpTwpjI0X8kQ/exec";
 
-    // تفعيل المؤثرات الصوتية الأصلية الخاصة بك عند التفاعل
     function soundSuccess() {
       const audio = new Audio("https://www.soundjay.com/buttons/sounds/button-09.mp3");
       audio.play().catch(()=>{});
@@ -362,10 +360,16 @@
           const username = data.username || u;
           const role     = data.role || "";
 
+          // 💾 [التعديل هنا]: تخزين الاسم بجميع المفاتيح المتوقعة لضمان التوافق التام مع بقية الصفحات
           localStorage.setItem("USERNAME", username);
+          localStorage.setItem("username", username);
+          localStorage.setItem("user", username);
           localStorage.setItem("ROLE", role);
           localStorage.setItem("aiu_user", username);
           localStorage.setItem("aiu_role", role);
+
+          // حفظ مؤقت في السيشين أيضاً كإجراء أمان إضافي
+          sessionStorage.setItem("username", username);
 
           setMsg("✔ تم تسجيل الدخول بنجاح، جاري التحويل...", "ok");
           punchCard("success");

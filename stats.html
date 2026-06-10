@@ -3,37 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>لوحة الإحصائيات - جامعة السلام الدولية</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="salam.css">
     <style>
-        .hero {
+        /* إصلاح نظام التمرير الأساسي للمتصفح وضمان سلاسته */
+        html, body {
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
+            background-color: #000; /* لون احتياطي للخلفية */
+            overflow-y: auto; /* السماح بالتمرير العمودي دائماً عند الحاجة */
+            scroll-behavior: smooth;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
             padding: 28px 14px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
             background: radial-gradient(circle at top, #0b1120 0%, #020617 55%, #000 100%);
             color: #E5F0FF;
             font-family: system-ui, -apple-system, sans-serif;
         }
+
         .stats-container {
             width: 100%;
             max-width: 1100px;
             margin: 0 auto;
         }
+
         .header-title {
             text-align: center;
             margin-bottom: 30px;
         }
+
         .header-title h1 {
             font-size: 2rem;
             color: #38bdf8;
             margin-bottom: 5px;
         }
-        /* شبكة اللوحات الرقمية المحدثة لتستوعب 3 بطاقات بشكل متناسق */
+
+        /* شبكة اللوحات الرقمية - متوافقة كلياً مع الشاشات والهواتف */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
+
         .stat-card {
             background: rgba(15, 23, 42, 0.8);
             border: 1px solid rgba(148, 163, 184, 0.2);
@@ -42,24 +63,29 @@
             text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             backdrop-filter: blur(10px);
-            transition: transform 0.3s;
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s, border-color 0.3s;
         }
+
         .stat-card:hover {
             transform: translateY(-5px);
             border-color: #38bdf8;
         }
+
         .stat-card h3 {
             font-size: 1rem;
             color: #9CA3AF;
             margin: 0 0 10px 0;
         }
+
         .stat-card .number {
             font-size: 2.5rem;
             font-weight: 800;
             color: #fff;
         }
-        .stat-card .total-label { color: #38bdf8; } /* تعديل اللون للأزرق النظامي */
-        .stat-card .graduates-label { color: #10b981; } /* لون أخضر مميز للخريجين */
+
+        .stat-card .total-label { color: #38bdf8; }
+        .stat-card .graduates-label { color: #10b981; }
         .stat-card .filter-label { color: #f59e0b; }
 
         /* قسـم التصفية الديناميكية للفصول */
@@ -74,6 +100,12 @@
             gap: 15px;
             flex-wrap: wrap;
         }
+
+        .filter-section label {
+            font-weight: bold; 
+            color:#38bdf8;
+        }
+
         .filter-section select {
             padding: 10px 20px;
             border-radius: 8px;
@@ -82,6 +114,9 @@
             border: 1px solid rgba(148,163,184,0.4);
             font-size: 1rem;
             cursor: pointer;
+            outline: none;
+            flex: 1;
+            min-width: 200px;
         }
         
         /* جدول عرض الكليات */
@@ -90,45 +125,87 @@
             border: 1px solid rgba(148, 163, 184, 0.2);
             border-radius: 16px;
             padding: 24px;
+            margin-bottom: 20px;
         }
+
         .colleges-box h2 {
             font-size: 1.3rem;
             color: #38bdf8;
             margin-top: 0;
             margin-bottom: 15px;
         }
+
         .college-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 14px 0;
             border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+            flex-wrap: wrap; /* يسمح بنزول النسب تحت الاسم في الشاشات الصغيرة جداً لضمان عدم التداخل */
+            gap: 10px;
         }
+
+        .college-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            width: 100%;
+        }
+
+        @media(min-width: 600px) {
+            .college-info-wrapper {
+                width: auto; /* يعود لحجمه الطبيعي في الشاشات الكبيرة */
+            }
+        }
+
         .progress-bar-bg {
             background: rgba(255,255,255,0.05);
             border-radius: 999px;
             height: 8px;
-            width: 150px;
+            width: 120px;
             overflow: hidden;
-            margin-right: 15px;
         }
+
+        @media(min-width: 400px) {
+            .progress-bar-bg { width: 150px; }
+        }
+
         .progress-bar-fill {
             background: #38bdf8;
             height: 100%;
             width: 0%;
             transition: width 0.5s ease-in-out;
         }
+
         .btn-back {
             display: inline-block;
-            margin-top: 20px;
-            padding: 10px 24px;
+            margin-top: 10px;
+            padding: 12px 28px;
             border-radius: 999px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(148,163,184,0.3);
             color: #E5F0FF;
             text-decoration: none;
+            transition: all 0.2s;
+            text-align: center;
         }
-        .btn-back:hover { border-color: #38bdf8; background: rgba(255,255,255,0.1); }
+
+        .btn-back:hover { 
+            border-color: #38bdf8; 
+            background: rgba(255,255,255,0.1); 
+        }
+
+        /* تحسينات إضافية للهواتف المحمولة الصغيره */
+        @media (max-width: 600px) {
+            .hero { padding: 20px 10px; }
+            .header-title h1 { font-size: 1.6rem; }
+            .colleges-box { padding: 16px; }
+            .college-row { justify-content: center; text-align: center; flex-direction: column; }
+            .college-info-wrapper { justify-content: center; }
+            .btn-back { width: 100%; box-sizing: border-box; }
+        }
     </style>
 </head>
 <body>
@@ -160,7 +237,7 @@
         </div>
 
         <div class="filter-section">
-            <label style="font-weight: bold; color:#38bdf8;">اختر الفصل الدراسي للاستعلام الفعلي:</label>
+            <label>اختر الفصل الدراسي للاستعلام الفعلي:</label>
             <select id="semesterSelector" onchange="onSemesterChange(this.value)">
                 <option value="">-- جاري تحميل الفصول الدراسية --</option>
             </select>
@@ -173,7 +250,7 @@
             </div>
         </div>
 
-        <a href="dashboard.html" class="btn-back">🡪 العودة للوحة التحكم رئيسية</a>
+        <a href="dashboard.html" class="btn-back">🡪 العودة للوحة التحكم الرئيسية</a>
 
     </div>
 </div>
@@ -189,13 +266,9 @@
             const data = await response.json();
             rawStatsData = data;
             
-            // 1. عرض الرقم الإجمالي العام للطلاب النظاميين (المفترض بعد تعديل السكريبت يكون صافي)
             document.getElementById("totalStudentsNum").innerText = data.totalStudents;
-            
-            // 2. عرض إجمالي الخريجين العام في البطاقة الجديدة
             document.getElementById("totalGraduatesNum").innerText = data.totalGraduates || 0;
             
-            // 3. تعبئة قائمة اختيار الفصول الدراسية المتاحة في الشيت تلقائياً
             const selector = document.getElementById("semesterSelector");
             selector.innerHTML = `<option value="">اختر الفصل الدراسي من هنا</option>`;
             
@@ -206,7 +279,6 @@
                 selector.appendChild(opt);
             });
             
-            // تعيين ربيع 2026 كقيمة افتراضية إذا كانت موجودة بالقائمة
             if(data.semesters.includes("ربيع 2026")) {
                 selector.value = "ربيع 2026";
                 onSemesterChange("ربيع 2026");
@@ -215,8 +287,6 @@
                 onSemesterChange(data.semesters[0]);
             }
 
-            // 4. بناء جدول تعداد الكليات ونسبة إشغالها بالكامل
-            // ملاحظة: النسبة المئوية للكليات ستحسب بناءً على إجمالي الطلاب النظاميين الحاليين
             renderColleges(data.colleges, data.totalStudents);
             
         } catch (error) {
@@ -225,6 +295,7 @@
         }
     }
 
+    // تعديل بناء خلايا الكليات لتتوافق مع الشاشات الصغيرة دون تداخل البارات والنسب
     function renderColleges(colleges, total) {
         const container = document.getElementById("collegesContainer");
         container.innerHTML = "";
@@ -242,7 +313,7 @@
             row.className = "college-row";
             row.innerHTML = `
                 <div style="font-weight:600;">🎓 ${name}</div>
-                <div style="display:flex; align-items:center; gap: 15px;">
+                <div class="college-info-wrapper">
                     <span style="font-weight:bold; color:#38bdf8;">${count} طالب</span>
                     <div class="progress-bar-bg">
                         <div class="progress-bar-fill" style="width: ${percentage}%"></div>
